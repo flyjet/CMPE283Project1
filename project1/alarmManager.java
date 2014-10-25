@@ -35,6 +35,11 @@ public class alarmManager {
 				}
 			}
 			alarmMgr.createAlarm(vm, spec);
+			if(vm.getSummary().getOverallStatus().toString().equals("yellow")){
+				System.out.println("\n--------------------------");
+				System.out.println("Set Power off Alarm for " + vm.getName() + " Yellow");
+			}
+
 		}
 	}
 
@@ -58,7 +63,7 @@ public class alarmManager {
 		stateAlarmExpression.setType("VirtualMachine");
 		stateAlarmExpression.setStatePath("runtime.powerState");
 		stateAlarmExpression.setOperator(StateAlarmOperator.isEqual);
-		stateAlarmExpression.setRed("poweredOff");
+		stateAlarmExpression.setYellow("poweredOff");
 		return stateAlarmExpression;
 	}
 	

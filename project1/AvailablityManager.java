@@ -49,15 +49,17 @@ public class AvailablityManager {
 	  //vhostManager.addHost();
 	  
 	  /*--- remove vhost --*/	
-	  HostSystem vhost = VhostManager.findVhostByNameInVcenter(oldHostName);
-	  VhostManager.removeHost(vhost);
+	  //HostSystem vhost = VhostManager.findVhostByNameInVcenter(oldHostName);
+	  //VhostManager.removeHost(vhost);
 	
 	  /*--- migrate vm to newHost --*/	
 	  //vmManager.migrateVMByName(vmname, newHostName);
 	  
 	  
 	  /*--- set alarm for user power off VM --*/	  
-	  //alarmManager.setPowerOffAlarm();
+	  alarmManager.setPowerOffAlarm();
+
+
 	  
 	  
 	}

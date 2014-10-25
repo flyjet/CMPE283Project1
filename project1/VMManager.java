@@ -189,8 +189,11 @@ public class VMManager {
 		System.out.println("***********End VHost******************");
 		
 		ManagedEntity[] mes = new InventoryNavigator(rootFolder).searchManagedEntities("VirtualMachine");
+
 		for(int m=0; m<mes.length; m++) {		
 			VirtualMachine vm = (VirtualMachine) mes[m];
+			String alarmColor = vm.getSummary().getOverallStatus().toString();
+			
 			
 			System.out.println("\n--------------VM Statics--------------");
 			System.out.println("VM " + (m+1) );
@@ -201,14 +204,19 @@ public class VMManager {
 			System.out.println("Memory: " + vm.getConfig().getHardware().memoryMB + " MB");
 			System.out.println("IP Addresses: " + vm.getGuest().getIpAddress());
 			System.out.println("Running State: " + vm.getGuest().guestState);
+			System.out.println("Over stauts: " + alarmColor );
+			if(alarmColor.equals("yellow")){
+				System.out.println(vm.getName() + " is powered off by user." );
+			}
 			
-			System.out.println("Data from VirtualMachineQuickStats: ");
+			System.out.println("\nData from VirtualMachineQuickStats: ");
 			VirtualMachineQuickStats vqs = vm.getSummary().getQuickStats();
 			System.out.println( "OverallCpuUsage: " + vqs.getOverallCpuUsage() + " MHz");
 			System.out.println( "GuestMemoryUsage: " + vqs.getGuestMemoryUsage() + " MB");
 			System.out.println( "ConsumedOverheadMemory: " + vqs.getConsumedOverheadMemory() + " MB");
 			System.out.println( "FtLatencyStatus: " + vqs.getFtLatencyStatus());
 			System.out.println( "GuestHeartbeatStatus: " + vqs.getGuestHeartbeatStatus());
+			
 			System.out.println( "End ---------------------- ");
 		}	
 	}
