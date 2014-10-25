@@ -26,33 +26,38 @@ public class AvailablityManager {
 	  private static VhostManager vhostManager;
 		
 	  static String vmname = "T06-VM02-Ubuntu1";
-	  static String newHostName = "130.65.132.182";  //vHost name
+	  static String newHostName = "130.65.132.181";  //vHost name
+	  static String oldHostName = "130.65.132.184";  
 
 	  public static void main(String[] args) throws Exception {
 		
 	  vmManager = new VMManager();
 	  vhostManager = new VhostManager();
 	  
+	  /*--- show VM Statics --*/
 	  VMManager.showVMStatics();
 	  
-	  // VirtualMachine vm =VMManager.findVmByNameInVcenter(vmname);
-	  //VMManager.PowerOff(vm);
-	  //PingManager.pingVM(vm);
-	  	  
-		// run thread for monitor all VMs
-	   // Monitor monitor = new Monitor();
-		//new Thread(monitor).start();
+	  /*--- run thread for monitor all VMs --*/
+	  //Monitor monitor = new Monitor();
+	  //new Thread(monitor).start();
 		
-		//run thread for snapshot for VMs
-		//SnapshotManager snapshotManager = new SnapshotManager();
-		//new Thread(snapshotManager).start();
+	  /*--- run thread for snapshot for VMs --*/		
+	  //SnapshotManager snapshotManager = new SnapshotManager();
+	  //new Thread(snapshotManager).start();
 		
-		//create new vHost
-		vhostManager.addHost();
+	  /*--- add new vhost --*/	
+	  //vhostManager.addHost();
+	  
+	  /*--- remove vhost --*/	
+	  HostSystem vhost = VhostManager.findVhostByNameInVcenter(oldHostName);
+	  VhostManager.removeHost(vhost);
 	
-	    //vmManager.migrateVMByName(vmname, newHostName);
-	  	  
-	   // alarmManager.setPowerOffAlarm();
+	  /*--- migrate vm to newHost --*/	
+	  //vmManager.migrateVMByName(vmname, newHostName);
+	  
+	  
+	  /*--- set alarm for user power off VM --*/	  
+	  //alarmManager.setPowerOffAlarm();
 	  
 	  
 	}

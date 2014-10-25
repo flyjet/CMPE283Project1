@@ -6,6 +6,7 @@ import java.net.URL;
 
 import com.vmware.vim25.ComputeResourceConfigSpec;
 import com.vmware.vim25.HostConnectSpec;
+import com.vmware.vim25.mo.ComputeResource;
 import com.vmware.vim25.mo.Datacenter;
 import com.vmware.vim25.mo.Folder;
 import com.vmware.vim25.mo.HostSystem;
@@ -33,7 +34,7 @@ public class VhostManager {
 	    	System.out.println("Fail to find HostSystem: " + vhost);
 	    	return null;
 	    }else{
-	    	System.out.println( "Success found HostSystem: " + vhost);
+	    	System.out.println( "\n Success found HostSystem: " + vhost);
 			return vhost;  	 	    	
 	    }    		    	
     }
@@ -86,6 +87,30 @@ public class VhostManager {
 			System.out.println("Fail to add host " + hostName);
 		}
 	}
+    
+    //********* remove vHost from Data center **********//
+	public static void removeHost(HostSystem vhost) throws Exception {
+		String vhostname = vhost.getName();
+		System.out.println("---------------------------");
+		System.out.println("Tying to remove the vHost from the vCenter");
+		Task disconnecttask = vhost.disconnectHost();
+		System.out.println("\nFirst disconnect host: " + vhostname);
+		
+		if (disconnecttask.waitForTask() == Task.SUCCESS) {
+			System.out.println("Now vHost " + vhostname + " disconnected succesfully!");
+			ComputeResource cr = (ComputeResource) vhost.getParent();
+			Task removeTask = cr.destroy_Task();
+			System.out.println("\nTry to remove host: " + vhostname);
+			if (removeTask.waitForTask() == removeTask.SUCCESS) {
+				System.out.println("Host " + vhostname + " is removed successfuly!");
+			} else {
+				System.out.println("Fail to remove host: " + vhostname);
+			}
+		} else {
+			System.out.println("Fail to disconnect host: " + vhostname);
+		}
+	}
+    
     
     
     //********* get Data Center*********//

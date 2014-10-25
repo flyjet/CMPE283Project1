@@ -201,6 +201,14 @@ public class VMManager {
 			System.out.println("Memory: " + vm.getConfig().getHardware().memoryMB + " MB");
 			System.out.println("IP Addresses: " + vm.getGuest().getIpAddress());
 			System.out.println("Running State: " + vm.getGuest().guestState);
+			
+			System.out.println("Data from VirtualMachineQuickStats: ");
+			VirtualMachineQuickStats vqs = vm.getSummary().getQuickStats();
+			System.out.println( "OverallCpuUsage: " + vqs.getOverallCpuUsage() + " MHz");
+			System.out.println( "GuestMemoryUsage: " + vqs.getGuestMemoryUsage() + " MB");
+			System.out.println( "ConsumedOverheadMemory: " + vqs.getConsumedOverheadMemory() + " MB");
+			System.out.println( "FtLatencyStatus: " + vqs.getFtLatencyStatus());
+			System.out.println( "GuestHeartbeatStatus: " + vqs.getGuestHeartbeatStatus());
 			System.out.println( "End ---------------------- ");
 		}	
 	}
