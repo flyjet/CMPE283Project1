@@ -27,7 +27,7 @@ public class alarmManager {
 		AlarmManager alarmMgr = si.getAlarmManager();
 		for (VirtualMachine vm : VMManager.getAllVMs()) {
 			String vmname =vm.getName();
-			AlarmSpec spec = createAlarmSpec("VmPowerOffAlarm." + vmname);
+			AlarmSpec spec = createAlarmSpec("Vm_PowerOffAlarm." + vmname +"\n");
 			Alarm[] alarms = alarmMgr.getAlarm(vm);
 			for (Alarm alarm : alarms) {
 				if (alarm.getAlarmInfo().getName().equals(spec.getName())) {
@@ -39,7 +39,6 @@ public class alarmManager {
 				System.out.println("\n--------------------------");
 				System.out.println("Set Power off Alarm for " + vm.getName() + " Yellow");
 			}
-
 		}
 	}
 

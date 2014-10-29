@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe283.project1;
 
 import com.vmware.vim25.mo.HostSystem;
+
 import com.vmware.vim25.mo.VirtualMachine;
 
 public class Monitor implements Runnable {
@@ -14,8 +15,10 @@ public class Monitor implements Runnable {
 		System.out.println("\n *********Now start monitor all the VMs********");
 		try {
 			
+		    /*--- set alarm for user power off VM --*/	  
+		    alarmManager.setPowerOffAlarm();
+			  
 			while(RUNNING) {
-
 				VirtualMachine[] vms = VMManager.getAllVMs();
 				for(VirtualMachine vm : vms) {
 					String vmname=vm.getName();
@@ -25,11 +28,17 @@ public class Monitor implements Runnable {
 						//ping vm successfully
 						System.out.println("Ping " + vmname + " success");
 						System.out.println(vmname + " works fine! \n");
-					} else {
+					} 
+					
+					else {
 						System.out.println("Fail to ping the vm " + vmname);
 						if(VMManager.isVMPowerOff(vm)) {
 							//vm power off
-							System.out.println("Power state: " + vm.getRuntime().getPowerState() +"\n");
+							System.out.println("Power state: " + vm.getRuntime().getPowerState());
+							//check vm alarm color is yellow, if yellow, power off by user
+							if(vm.getSummary().getOverallStatus().toString().equals("yellow")){
+							System.out.println("vm " + vmname +" is powered off by user. \n");								
+							}
 						}
 						else if(VMManager.isVMPowerOn(vm)) {
 							//vm power on, ping vm failed, try again
@@ -68,7 +77,8 @@ public class Monitor implements Runnable {
 		if(!PingManager.pingVM(vm) ){  //Fail to ping the vm
 			System.out.println("Try to ping vHost " + vhname + " for vm  " + vmname);			
 			if(PingManager.pingVhost(vhost)) {
-				System.out.println("Host " + vhname + " work fine, and revert VM " + vmname + " to the lastest Snapshot ");
+				System.out.println("Host " + vhname + " work fine, and revert VM " + 
+						vmname + " to the lastest Snapshot ");
 				VMManager.revertToSnapshotAndPoweron(vm);
 			} else {
 				System.out.println("Ping vHost " + vhname + " fail and try again.... ");
@@ -80,11 +90,12 @@ public class Monitor implements Runnable {
 					}
 				}
 				if(!PINGABLE){
-					
-					//???????????
-					//Do something.....
+					//find all other live vHosts 
+					HostSystem[] liveHost = VhostManager.getLivevHost();
+					if(liveHost==null || liveHost.length==0){
+						VhostManager.addHost();						
+					}
 				}
-
 			}
 		}
 		System.out.println();

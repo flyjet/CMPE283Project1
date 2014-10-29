@@ -49,7 +49,7 @@ public class VhostManager {
     
     
     //********* check all vHost and ping **********//
-    public static void checkAllVhostState(ServiceInstance si )throws Exception {
+    public static void checkAllVhostState()throws Exception {
     	Folder rootFolder = si.getRootFolder();	
     	ManagedEntity[] hosts = new InventoryNavigator(rootFolder).searchManagedEntities("HostSystem");
     	if(hosts==null || hosts.length==0) {
@@ -69,6 +69,28 @@ public class VhostManager {
     	}	     	
     }
     
+    //********* get live vHost **********//
+
+	public static HostSystem[] getLivevHost() throws Exception {
+    	
+    	Folder rootFolder = si.getRootFolder();	
+    	ManagedEntity[] hosts = new InventoryNavigator(rootFolder).searchManagedEntities("HostSystem");
+    	if(hosts==null || hosts.length==0) {
+    		return null;
+    	}
+    	HostSystem[] liveHost =  new HostSystem[hosts.length];
+    	for(int i=0; i<hosts.length; i++){     //get all vHost to ping
+    		HostSystem newHost = (HostSystem) hosts[i];
+    		//String vHost_IP = newHost.getConfig().getNetwork().getVnic()[0].getSpec().getIp().getIpAddress();
+    		boolean pingable = PingManager.pingVhost(newHost);	
+    		if(pingable){
+    			liveHost[i] = newHost;
+    		}
+    	}	
+    	return liveHost;
+    }
+    
+    
     //********* add vHost **********//
     public static void addHost() throws Exception {
 		HostConnectSpec addHost = new HostConnectSpec();
@@ -80,7 +102,8 @@ public class VhostManager {
 		Datacenter dc = getDatacenter();
 		System.out.println("---------------------------");
 		System.out.println("\nTry to add a new host: " + hostName);
-		Task task = dc.getHostFolder().addStandaloneHost_Task(addHost, new ComputeResourceConfigSpec(), true);
+		Task task = dc.getHostFolder().addStandaloneHost_Task(addHost, 
+				new ComputeResourceConfigSpec(), true);
 		if (task.waitForTask() == Task.SUCCESS) {
 			System.out.println("New host: " + hostName + " added succesfully!");
 		} else {
@@ -111,8 +134,9 @@ public class VhostManager {
 		}
 	}
     
-    
-    
+
+	
+	
     //********* get Data Center*********//
     public static Datacenter getDatacenter() throws Exception {
 		Datacenter dc = null;

@@ -34,16 +34,27 @@ public class AvailablityManager {
 	  vmManager = new VMManager();
 	  vhostManager = new VhostManager();
 	  
+	  /*--- set alarm for user power off VM --*/	  
+	  //alarmManager.setPowerOffAlarm();
+	  
 	  /*--- show VM Statics --*/
 	  VMManager.showVMStatics();
 	  
 	  /*--- run thread for monitor all VMs --*/
-	  //Monitor monitor = new Monitor();
-	  //new Thread(monitor).start();
-		
+	  Monitor monitor = new Monitor();
+	  new Thread(monitor).start();		
+
+	  
 	  /*--- run thread for snapshot for VMs --*/		
 	  //SnapshotManager snapshotManager = new SnapshotManager();
 	  //new Thread(snapshotManager).start();
+	  
+	  
+	  /*--- show all live vHost --*/
+	  //HostSystem[] liveHost = VhostManager.getLivevHost();
+	  //for(int i= 0; i<liveHost.length; i++) {
+	  //	  System.out.println("======" + liveHost[i].getName());    		  
+	  //}
 		
 	  /*--- add new vhost --*/	
 	  //vhostManager.addHost();
@@ -54,14 +65,6 @@ public class AvailablityManager {
 	
 	  /*--- migrate vm to newHost --*/	
 	  //vmManager.migrateVMByName(vmname, newHostName);
-	  
-	  
-	  /*--- set alarm for user power off VM --*/	  
-	  alarmManager.setPowerOffAlarm();
-
-
-	  
-	  
 	}
 
 }
